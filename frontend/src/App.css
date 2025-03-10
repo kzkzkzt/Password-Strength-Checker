@@ -1,0 +1,44 @@
+/*
+ * Password Strength Checker Frontend Styles
+ * Author: Kent Tupaz
+ * GitHub: https://github.com/kzkzkzt
+ * Portfolio: https://kzkzkzt.github.io/github-portfolio/
+ */
+
+.App {
+	text-align: center;
+	padding: 20px;
+	font-family: Arial, sans-serif;
+}
+
+input {
+	padding: 10px;
+	margin: 10px;
+	width: 300px;
+	font-size: 16px;
+}
+
+button {
+	padding: 10px 20px;
+	font-size: 16px;
+	cursor: pointer;
+}
+
+.strength-meter {
+	width: 300px;
+	height: 10px;
+	background-color: #ddd;
+	margin: 20px auto;
+	border-radius: 5px;
+	overflow: hidden;
+}
+
+.strength-bar {
+	height: 100%;
+	transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.breach-warning {
+	color: red;
+	font-weight: bold;
+}
