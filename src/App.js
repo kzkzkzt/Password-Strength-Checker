@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./App.css";
+import PasswordStrengthChecker from "./components/PasswordStrengthChecker";
 
 function App() {
 	const [password, setPassword] = useState("");
@@ -43,6 +44,7 @@ function App() {
 	return (
 		<div className="App">
 			<h1>Password Strength Checker</h1>
+			<PasswordStrengthChecker />
 			<input
 				type="password"
 				placeholder="Enter your password"
