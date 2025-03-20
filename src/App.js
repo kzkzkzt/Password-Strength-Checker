@@ -9,13 +9,16 @@ function App() {
 	const handleCheckPassword = async () => {
 		try {
 			console.log("Sending request with password:", password);
-			const response = await fetch("http://127.0.0.1:5000/check-password", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ password }),
-			});
+			const response = await fetch(
+				"https://flask-backend-password-strength-checker.onrender.com",
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ password }),
+				}
+			);
 
 			console.log("Response status:", response.status);
 			if (!response.ok) {
