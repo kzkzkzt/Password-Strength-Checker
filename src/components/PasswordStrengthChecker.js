@@ -1,3 +1,4 @@
+// File: src/components/
 import React, { useState } from "react";
 
 const PasswordStrengthChecker = () => {

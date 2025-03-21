@@ -1,50 +1,59 @@
 import React, { useState } from "react";
 import "./App.css";
-import PasswordStrengthChecker from "./components/PasswordStrengthChecker";
+import sha1 from "js-sha1"; // Import the SHA-1 hashing function
 
 function App() {
 	const [password, setPassword] = useState("");
 	const [strength, setStrength] = useState(0);
 	const [breachCount, setBreachCount] = useState(0);
+	const [strengthText, setStrengthText] = useState("");
 
 	const handleCheckPassword = async () => {
 		try {
-			console.log("Sending request with password:", password);
+			// Hash the password using SHA-1
+			const hashedPassword = sha1(password).toUpperCase();
+			const prefix = hashedPassword.substring(0, 5);
+			const suffix = hashedPassword.substring(5);
+
+			// Send a request to the HIBP API
 			const response = await fetch(
-				"https://flask-backend-password-strength-checker.onrender.com",
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({ password }),
-				}
+				`https://api.pwnedpasswords.com/range/${prefix}`
 			);
+			const data = await response.text();
 
-			console.log("Response status:", response.status);
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
+			// Check if the password hash is in the response
+			const hashes = data.split("\n");
+			let found = false;
+			hashes.forEach((hash) => {
+				const [suffixHash, count] = hash.split(":");
+				if (suffixHash === suffix) {
+					setBreachCount(parseInt(count, 10));
+					found = true;
+				}
+			});
+
+			// Update strength and feedback based on breach count
+			if (found) {
+				setStrengthText("Weak");
+				setStrength(2); // Set strength to weak
+			} else {
+				setStrengthText("Strong");
+				setStrength(5); // Set strength to strong
 			}
-
-			const data = await response.json();
-			console.log("Response data:", data);
-			setStrength(data.strength);
-			setBreachCount(data.breach_count);
 		} catch (error) {
-			console.error("Error checking password:", error);
+			console.error("Error checking password breach:", error);
 		}
 	};
 
 	const getStrengthColor = () => {
 		if (strength <= 2) return "red";
-		if (strength === 3) return "orange";
+		if (strength === 3 || strength === 4) return "orange";
 		return "green";
 	};
 
 	return (
 		<div className="App">
 			<h1>Password Strength Checker</h1>
-			<PasswordStrengthChecker />
 			<input
 				type="password"
 				placeholder="Enter your password"
@@ -65,9 +74,20 @@ function App() {
 				</div>
 			)}
 
+			{strengthText && (
+				<p className="strength-feedback">
+					This password is <strong>{strengthText}</strong>.
+				</p>
+			)}
+
 			{breachCount > 0 && (
 				<p className="breach-warning">
 					⚠️ This password has been breached {breachCount} times. Do not use it!
+				</p>
+			)}
+			{strengthText === "Strong" && breachCount === 0 && (
+				<p className="strong-password">
+					✅ This password is <strong>good</strong>.
 				</p>
 			)}
 		</div>
