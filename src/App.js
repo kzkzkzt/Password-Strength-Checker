@@ -2,12 +2,36 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import sha1 from "js-sha1"; // Import the SHA-1 hashing function
 
+// Add the button styles
+export const buttonStyles = {
+	button: {
+		backgroundColor: "#00ffaa", // Neon green background
+		color: "#121212", // Dark text for contrast
+		border: "2px solid #00ffaa", // Neon green border
+		padding: "12px 24px", // Adjusted padding for a bigger button
+		fontSize: "1rem",
+		borderRadius: "5px", // Rounded corners
+		textDecoration: "none", // No underline
+		display: "inline-block", // Inline block to support multiple buttons in a row
+		transition: "all 0.3s ease", // Smooth transition for hover effects
+		textAlign: "center",
+		cursor: "pointer", // Pointer cursor to indicate clickable
+		margin: "10px 0", // Vertical margin to space buttons
+	},
+	buttonHover: {
+		backgroundColor: "#121212", // Dark background on hover
+		color: "#00ffaa", // Neon green text
+		boxShadow: "0 0 20px #00ffaa, 0 0 30px #00ffaa, 0 0 40px #00ffaa", // Glowing effect on hover
+	},
+};
+
 function App() {
 	const [password, setPassword] = useState("");
 	const [strength, setStrength] = useState(0);
 	const [breachCount, setBreachCount] = useState(0);
 	const [strengthText, setStrengthText] = useState("");
 	const [feedbackText, setFeedbackText] = useState(""); // New state for feedback
+	const [isHovered, setIsHovered] = useState(false); // New state for hover effect
 
 	// Function to fetch and check password breach on every password change
 	useEffect(() => {
@@ -78,6 +102,24 @@ function App() {
 
 	return (
 		<div className="App">
+			{/* Return to Home Button */}
+			<a
+				href="https://kzkzkzt.github.io/github-portfolio"
+				style={{ textDecoration: "none" }}
+			>
+				<button
+					style={
+						isHovered
+							? { ...buttonStyles.button, ...buttonStyles.buttonHover }
+							: buttonStyles.button
+					}
+					onMouseEnter={() => setIsHovered(true)} // Set hover state on mouse enter
+					onMouseLeave={() => setIsHovered(false)} // Set hover state on mouse leave
+				>
+					Return to Home
+				</button>
+			</a>
+
 			<h1>Password Strength Checker</h1>
 			<input
 				type="password"
